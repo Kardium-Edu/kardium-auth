@@ -14,16 +14,16 @@ const KardiumAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
 
-  // Firebase config - Replace with your actual Firebase config
+  // Firebase config - Your actual config
   const firebaseConfig = {
-  apiKey: "AIzaSyAUc2-2PBZh75KBYBo_Mm1_bmq_-soUfYo",
-  authDomain: "kardium-login.firebaseapp.com",
-  projectId: "kardium-login",
-  storageBucket: "kardium-login.firebasestorage.app",
-  messagingSenderId: "248657302598",
-  appId: "1:248657302598:web:fa799f1ffe70db6a48e647",
-  measurementId: "G-9KS21HC37Z"
-};
+    apiKey: "AIzaSyAUc2-2PBZh75KBYBo_Mm1_bmq_-soUfYo",
+    authDomain: "kardium-login.firebaseapp.com",
+    projectId: "kardium-login",
+    storageBucket: "kardium-login.firebasestorage.app",
+    messagingSenderId: "248657302598",
+    appId: "1:248657302598:web:fa799f1ffe70db6a48e647",
+    measurementId: "G-9KS21HC37Z"
+  };
 
   // Initialize Firebase
   useEffect(() => {
@@ -51,7 +51,7 @@ const KardiumAuth = () => {
     initFirebase();
   }, []);
 
-  // Real email validation
+  // Real email validation using production backend
   const validateEmailReal = async (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -62,7 +62,7 @@ const KardiumAuth = () => {
     
     try {
       const response = await fetch(
-        `http://localhost:3001/validate-email?email=${encodeURIComponent(email)}`
+        `https://kardium-auth.onrender.com/validate-email?email=${encodeURIComponent(email)}`
       );
       
       if (!response.ok) {
@@ -72,6 +72,7 @@ const KardiumAuth = () => {
       }
       
       const data = await response.json();
+      console.log('Full API Response:', data);
       
       const deliverability = data.email_deliverability;
       const quality = data.email_quality;
@@ -194,7 +195,6 @@ const KardiumAuth = () => {
 
       setSuccess('Successfully logged in!');
       setLoading(false);
-      // isLoggedIn will be set by the auth state listener
     } catch (err) {
       setLoading(false);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
@@ -232,7 +232,7 @@ const KardiumAuth = () => {
     }
   };
 
-  // If logged in, show dashboard
+  // If logged in, show dashboard iframe
   if (isLoggedIn) {
     return (
       <iframe
