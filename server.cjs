@@ -16,20 +16,26 @@ app.get('/validate-email', async (req, res) => {
     const API_KEY = 'ac02713ef78e4565b9a9802f1443de2e';
     const url = `https://emailreputation.abstractapi.com/v1/?api_key=${API_KEY}&email=${encodeURIComponent(email)}`;
     
-    console.log('Validating email:', email);  // ADD THIS
+    console.log('Validating email:', email);
     
     const response = await fetch(url);
     const data = await response.json();
     
-    console.log('API Response:', data);  // ADD THIS
+    console.log('API Response:', data);
     
     res.json(data);
   } catch (error) {
-    console.error('Error:', error);  // ADD THIS
+    console.error('Error:', error);
     res.status(500).json({ error: 'Validation failed' });
   }
 });
 
-app.listen(3001, () => {
-  console.log('Email validation server running on http://localhost:3001');
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ status: 'Server is running' });
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Email validation server running on port ${PORT}`);
 });
